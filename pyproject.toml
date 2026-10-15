@@ -13,8 +13,11 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=8.0,<9.0",
+  "pytest>=9.0.3,<10.0",
   "ruff>=0.9,<1.0",
+  "mypy>=1.13,<2.0",
+  "pytest-cov>=6.0,<7.0",
+  "pip-audit>=2.7,<3.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -22,7 +25,14 @@ include = ["p3*", "core*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra"
+addopts = "-ra --strict-config --strict-markers"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["core", "p3"]
+show_error_codes = true
+warn_unused_configs = true
 
 [tool.ruff]
 line-length = 100
