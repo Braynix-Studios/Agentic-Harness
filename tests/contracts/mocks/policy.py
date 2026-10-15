@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from core.contracts.policy import PolicyDecision, PolicyRequest, PolicyResult
 
@@ -34,5 +34,5 @@ class MockPolicyVerifier:
             decision=decision,
             reason=reason,
             policy_id=self._policy_id,
-            evaluated_at=datetime.now(timezone.utc),
+            evaluated_at=datetime.now(UTC),
         )

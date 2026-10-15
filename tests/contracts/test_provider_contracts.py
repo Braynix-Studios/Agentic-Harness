@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -20,8 +20,8 @@ from core.contracts import (
     PolicyDecision,
     PolicyRequest,
     PolicyVerifier,
-    RetrievedChunk,
     RetrievalQuery,
+    RetrievedChunk,
     Retriever,
     ToolCallRequest,
     ToolDescriptor,
@@ -39,7 +39,7 @@ from tests.contracts.mocks.tools import echo_handler
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def test_mocks_conform_to_runtime_checkable_protocols() -> None:

@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from collections.abc import Sequence
 
-from core.contracts.rag import RetrievedChunk, RetrievalQuery
+from core.contracts.rag import RetrievalQuery, RetrievedChunk
 
 
 class MockRetriever:
@@ -19,13 +19,9 @@ class MockRetriever:
             for chunk in self._chunks
             if terms.intersection(set(re.findall(r"\w+", chunk.text.casefold())))
             and all(
-                chunk.metadata.get(key) == value
-                for key, value in query.metadata_filters.items()
+                chunk.metadata.get(key) == value for key, value in query.metadata_filters.items()
             )
-            and (
-                query.namespace is None
-                or chunk.metadata.get("namespace") == query.namespace
-            )
+            and (query.namespace is None or chunk.metadata.get("namespace") == query.namespace)
         ]
         matches.sort(key=lambda chunk: (-chunk.relevance_score, chunk.chunk_id))
         return tuple(matches[: query.top_k])

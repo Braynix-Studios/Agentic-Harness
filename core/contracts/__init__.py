@@ -13,7 +13,7 @@ from core.contracts.llm import (
 from core.contracts.mcp import ToolCallRequest, ToolCallResult, ToolDescriptor, ToolProvider
 from core.contracts.memory import MemoryKind, MemoryQuery, MemoryRecord, MemoryStore
 from core.contracts.policy import PolicyDecision, PolicyRequest, PolicyResult, PolicyVerifier
-from core.contracts.rag import RetrievedChunk, RetrievalQuery, Retriever
+from core.contracts.rag import RetrievalQuery, RetrievedChunk, Retriever
 
 __all__ = [
     "ErrorCode",

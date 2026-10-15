@@ -29,8 +29,7 @@ class MockMemoryStore:
             and (query.kind is None or record.kind is query.kind)
             and (text_filter is None or text_filter in record.content.casefold())
             and all(
-                record.metadata.get(key) == value
-                for key, value in query.metadata_filters.items()
+                record.metadata.get(key) == value for key, value in query.metadata_filters.items()
             )
         ]
         results.sort(key=lambda record: (-record.updated_at.timestamp(), record.memory_id))
