@@ -1,24 +1,25 @@
-# Shared Contracts — v0.2.0 Priority
+# Shared Contracts — v0.2.0
 
-This package is the shared boundary between parallel workstreams. Freeze public interfaces and compatibility expectations here before implementations become deeply coupled.
+This package is the shared boundary between parallel P3 workstreams. The initial provider-neutral protocols and data models are now defined for:
 
-Planned modules (add only after the shapes are agreed):
+- `llm.py` — text generation request/response, messages, usage, and `LLMProvider`.
+- `mcp.py` — tool descriptors, tool-call requests/results, and `ToolProvider`.
+- `memory.py` — namespaced memory records/queries and `MemoryStore`.
+- `rag.py` — retrieval queries, provenance-carrying chunks, and `Retriever`.
+- `policy.py` — policy requests, allow/deny/approval decisions, and `PolicyVerifier`.
+- `errors.py` — stable error codes, safe error data, and `P3Error`.
+- `common.py` — JSON-compatible types shared by contract models.
 
-- `agent.py` — framework-neutral agent state and runtime request/result contracts.
-- `memory.py` — memory records, query/write requests, and store protocol.
-- `mcp.py` — capability/tool descriptors, invocation request/result, and runtime protocol.
-- `rag.py` — document/chunk models, retrieval request/results, and retriever protocol.
-- `llm.py` — provider-neutral generation request/response and gateway protocol.
-- `policy.py` — execution context, decisions, approval requirements, and policy protocol.
-- `evaluation.py` — evaluation case, metric, result, and report models.
-- `events.py` — stable runtime event envelope and event types.
-- `errors.py` — shared error taxonomy with actionable, non-secret messages.
-- `version.py` — contract package version and compatibility policy.
+Deterministic fakes live in `tests/contracts/mocks/` and the contract suite lives in `tests/contracts/test_provider_contracts.py`. Fakes are test-only and are not production providers.
 
-## Rules
+## Compatibility rules
 
-1. Keep public schemas typed and explicitly documented.
-2. Do not leak framework- or provider-specific classes through these contracts.
-3. Define timeout, cancellation, error, retry, and idempotency semantics where applicable.
-4. Add contract tests and conforming mocks alongside each contract.
-5. Breaking changes require an explicit versioning decision and migration notes.
+1. Keep models typed and documented; do not expose framework or provider SDK objects.
+2. Protocols use async methods for boundaries that may perform I/O.
+3. Namespace memory lookups explicitly. A missing record returns `None`; deletion returns whether anything was removed.
+4. Tool failures are returned as `ErrorInfo`; provider methods may raise `P3Error` for normalized transport/runtime failures.
+5. Policy evaluation is fail-closed: the caller must not execute an action after a verifier failure, `DENY`, or unresolved approval requirement.
+6. Retrieved chunks must preserve source identifiers. Relevance scores are ranking signals, not probabilities unless an adapter documents that interpretation.
+7. Add behavior and edge-case contract tests when changing any public schema/protocol. Cross-owner review is expected for breaking changes.
+
+The agent-state, checkpoint, events, and evaluation contracts are still pending; they are not implied to exist by these initial interfaces.
